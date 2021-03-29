@@ -1,3 +1,3 @@
-export default () => {
-  console.log('diff');
+export default ({ filepath1, filepath2, options }) => {
+  return 'realize me!';
 };

@@ -1,4 +1,5 @@
 import { Command } from 'commander/esm.mjs';
+import gendiff from './index.js';
 
 export default () => {
   const program = new Command();
@@ -9,9 +10,7 @@ export default () => {
     .arguments('<filepath1> <filepath2>')
     .option('-f, --format [type]', 'output format')
     .action((filepath1, filepath2, options) => {
-      console.log(filepath1);
-      console.log(filepath2);
-      console.log(options);
+      gendiff({ filepath1, filepath2, options });
     });
 
   program.parse();
