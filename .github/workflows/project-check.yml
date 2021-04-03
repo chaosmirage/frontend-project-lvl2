@@ -25,3 +25,9 @@ jobs:
         env:
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: make test
+
+      - name: Coverage
+        env:
+          CC_TEST_REPORTER_ID: ${{ secrets.CODECLIMATE }}
+        with:
+          coverageCommand: make test-coverage
