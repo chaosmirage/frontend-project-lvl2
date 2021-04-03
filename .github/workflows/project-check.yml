@@ -27,6 +27,7 @@ jobs:
         run: make test
 
       - name: Coverage
+        uses: paambaati/codeclimate-action@v2.2.4
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.CODECLIMATE }}
         with:
