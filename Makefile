@@ -8,6 +8,9 @@ lint:
 	npx eslint .
 
 test:
+	npm test
+
+test-watch:
 	npm test -- --watchAll
 
 test-coverage:

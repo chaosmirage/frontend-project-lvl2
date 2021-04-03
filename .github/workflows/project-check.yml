@@ -1,0 +1,27 @@
+name: project-check
+
+on: push
+
+jobs:
+  build:
+    name: Lint code base
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install packages
+        env:
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: make install
+
+      - name: Run lint
+        env:
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: make lint
+
+      - name: Run test
+        env:
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: make test
