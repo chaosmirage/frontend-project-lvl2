@@ -1,5 +1,15 @@
 import _ from 'lodash';
-import defaultReadFile from './utils/readFile';
+import fs from 'fs';
+import path from 'path';
+import process from 'process';
+
+const defaultReadFile = (filePath) => {
+  const preparedPath = path.isAbsolute(filePath)
+    ? path.join(process.cwd(), path.normalize(filePath))
+    : path.resolve(process.cwd(), path.normalize(filePath));
+
+  return fs.readFileSync(preparedPath, { encoding: 'utf8' });
+};
 
 const STATES = {
   initial: 'initial',
