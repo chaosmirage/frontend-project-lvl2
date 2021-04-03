@@ -2,6 +2,7 @@ import _ from 'lodash';
 import fs from 'fs';
 import path from 'path';
 import process from 'process';
+import makeParser from './parsers.js';
 
 const defaultReadFile = (filePath) => {
   const preparedPath = path.isAbsolute(filePath)
@@ -16,10 +17,6 @@ const STATES = {
   added: 'added',
   deleted: 'deleted',
   modified: 'modified',
-};
-
-const formatToParser = {
-  json: JSON.parse,
 };
 
 const makeDiff = (file1Content, file2Content) => {
@@ -79,7 +76,7 @@ const makeReport = (diffTree) => {
 };
 
 export default ({ filepath1, filepath2, format = 'json', readFile = defaultReadFile }) => {
-  const parse = formatToParser[format];
+  const parse = makeParser(format);
 
   const file1Content = parse(readFile(filepath1));
   const file2Content = parse(readFile(filepath2));
