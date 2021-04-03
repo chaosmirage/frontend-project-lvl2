@@ -1,31 +1,12 @@
 import { test, expect } from '@jest/globals';
 import gendiff from '../src/index.js';
+import readFile from '../src/utils/readFile.js';
 
-const filepath1 = 'filepath1';
-const filepath2 = 'filepath2';
+const filepath1 = 'file1.json';
+const filepath2 = 'file2.json';
 
-const file1 = {
-  host: 'hexlet.io',
-  timeout: 50,
-  proxy: '123.234.53.22',
-  follow: false,
-};
-
-const file2 = {
-  timeout: 20,
-  verbose: true,
-  host: 'hexlet.io',
-};
-
-const result = `{
-  - follow: false
-    host: hexlet.io
-  - proxy: 123.234.53.22
-  - timeout: 50
-  + timeout: 20
-  + verbose: true
-}`;
+const result = readFile('result.txt').trim();
 
 test('Сравнение плоских списков', () => {
-  expect(gendiff({ filepath1, filepath2 })).toBe(result);
+  expect(gendiff({ filepath1, filepath2, readFile })).toBe(result);
 });

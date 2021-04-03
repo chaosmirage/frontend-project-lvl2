@@ -10,7 +10,8 @@ export default () => {
     .arguments('<filepath1> <filepath2>')
     .option('-f, --format [type]', 'output format')
     .action((filepath1, filepath2, options) => {
-      gendiff({ filepath1, filepath2, options });
+      const { format } = options;
+      gendiff({ filepath1, filepath2, format });
     });
 
   program.parse();
