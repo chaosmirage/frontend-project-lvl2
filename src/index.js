@@ -3,6 +3,8 @@ import fs from 'fs';
 import path from 'path';
 import process from 'process';
 import makeParser from './parsers.js';
+import makeReporter from './reporters.js';
+import { STATES } from './constants.js';
 
 const defaultReadFile = (filePath) => {
   const preparedPath = path.isAbsolute(filePath)
@@ -10,13 +12,6 @@ const defaultReadFile = (filePath) => {
     : path.resolve(process.cwd(), path.normalize(filePath));
 
   return fs.readFileSync(preparedPath, { encoding: 'utf8' });
-};
-
-const STATES = {
-  initial: 'initial',
-  added: 'added',
-  deleted: 'deleted',
-  modified: 'modified',
 };
 
 const makeDiff = (content1, content2) => {
@@ -134,126 +129,16 @@ const makeDiff = (content1, content2) => {
   return result;
 };
 
-const makeReport = (diffTree) => {
-  const iter = (diff, level = 1) => {
-    if (!diff) {
-      return [];
-    }
-
-    const sorted = _.sortBy(Object.keys(diff));
-
-    const space = '  '.repeat(level);
-
-    const parsed = sorted.reduce((acc, key) => {
-      const { state, value, prevValue } = diff[key];
-
-      const renderObjectValue = (currentValue) => {
-        const result = [...iter(currentValue, level + 2).join('')].join('');
-        return result;
-      };
-
-      const keyValueSeparator = value === '' ? ':' : ': ';
-      const keyPrevValueSeparator = prevValue === '' ? ':' : ': ';
-
-      if (state === STATES.added) {
-        if (_.isPlainObject(value)) {
-          return [
-            ...acc,
-            [space, '+ ', key, ': ', '{\n'].join(''),
-            renderObjectValue(value),
-            [space, '  ', '}', '\n'].join(''),
-          ];
-        }
-
-        return [...acc, `${space}${'+ '}${key}${keyValueSeparator}${value}\n`];
-      }
-
-      if (state === STATES.deleted) {
-        if (_.isPlainObject(value)) {
-          const result = [
-            ...acc,
-            [space, '- ', key, ': ', '{\n'].join(''),
-            renderObjectValue(value),
-            [space, '  ', '}', '\n'].join(''),
-          ];
-
-          return result;
-        }
-
-        return [...acc, `${space}${'- '}${key}${keyValueSeparator}${value}\n`];
-      }
-
-      if (state === STATES.modified) {
-        if (_.isPlainObject(value) && _.isPlainObject(prevValue)) {
-          return [
-            ...acc,
-            [space, '  ', key, ': ', '{\n'].join(''),
-            renderObjectValue(value),
-            [space, '  ', '}', '\n'].join(''),
-          ];
-        }
-
-        const isPrimitiveValueModifiedToObjectValue = _.isPlainObject(value);
-
-        if (isPrimitiveValueModifiedToObjectValue) {
-          return [
-            ...acc,
-            [`${space}${'- '}${key}${keyPrevValueSeparator}${prevValue}\n`].join(''),
-            [space, '  ', key, ': ', '{\n'].join(''),
-            renderObjectValue(value),
-            [space, '  ', '}', '\n'].join(''),
-          ];
-        }
-
-        const isObjectValueModifiedToPrimitiveValue = _.isPlainObject(prevValue);
-        if (isObjectValueModifiedToPrimitiveValue) {
-          return [
-            ...acc,
-            [space, '- ', key, ': ', '{\n'].join(''),
-            renderObjectValue(prevValue),
-            [space, '  ', '}', '\n'].join(''),
-            [`${space}${'+ '}${key}${keyValueSeparator}${value}\n`].join(''),
-          ];
-        }
-
-        return [
-          ...acc,
-          [`${space}${'- '}${key}${keyPrevValueSeparator}${prevValue}\n`].join(''),
-          [`${space}${'+ '}${key}${keyValueSeparator}${value}\n`].join(''),
-        ];
-      }
-
-      if (state === STATES.initial) {
-        if (_.isPlainObject(value)) {
-          return [
-            ...acc,
-            [space, '  ', key, ': ', '{\n'].join(''),
-            renderObjectValue(value),
-            [space, '  ', '}', '\n'].join(''),
-          ];
-        }
-
-        return [...acc, `${space}${'  '}${key}${keyValueSeparator}${value}\n`];
-      }
-
-      throw new Error(`Unexpected state: ${state}`);
-    }, []);
-
-    return parsed;
-  };
-
-  return ['{\n', `${iter(diffTree).join('')}`, '}'].join('');
-};
-
-export default ({ filepath1, filepath2, format = 'json', readFile = defaultReadFile }) => {
-  const parse = makeParser(format);
+export default ({ filepath1, filepath2, format = 'stylish', readFile = defaultReadFile }) => {
+  const parse = makeParser(path.extname(filepath1));
+  const report = makeReporter(format);
 
   const parsedContent1 = parse(readFile(filepath1));
   const parsedContent2 = parse(readFile(filepath2));
 
   const diff = makeDiff(parsedContent1, parsedContent2);
 
-  const result = makeReport(diff);
+  const result = report(diff);
 
   return result;
 };
