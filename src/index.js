@@ -3,7 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import process from 'process';
 import makeParser from './parsers.js';
-import makeReporter from './reporters.js';
+import makeFormatter from './formatters/index.js';
 import { STATES } from './constants.js';
 
 const defaultReadFile = (filePath) => {
@@ -129,16 +129,16 @@ const makeDiff = (content1, content2) => {
   return result;
 };
 
-export default ({ filepath1, filepath2, format = 'stylish', readFile = defaultReadFile }) => {
+export default ({ filepath1, filepath2, format: formatName = 'stylish', readFile = defaultReadFile }) => {
   const parse = makeParser(path.extname(filepath1));
-  const report = makeReporter(format);
+  const format = makeFormatter(formatName);
 
   const parsedContent1 = parse(readFile(filepath1));
   const parsedContent2 = parse(readFile(filepath2));
 
   const diff = makeDiff(parsedContent1, parsedContent2);
 
-  const result = report(diff);
+  const result = format(diff);
 
   return result;
 };

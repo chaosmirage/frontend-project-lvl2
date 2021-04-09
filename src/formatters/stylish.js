@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { STATES } from './constants.js';
+import { STATES } from '../constants.js';
 
 export default (data) => {
   const iter = (currentLevelData, level = 1) => {
