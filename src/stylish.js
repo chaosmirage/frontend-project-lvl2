@@ -11,7 +11,7 @@ export default (data) => {
 
     const space = '  '.repeat(level);
 
-    const parsed = sorted.reduce((acc, key) => {
+    const parsed = sorted.flatMap((key) => {
       const { state, value, prevValue } = currentLevelData[key];
 
       const renderObjectValue = (currentValue) => {
@@ -25,20 +25,18 @@ export default (data) => {
       if (state === STATES.added) {
         if (_.isPlainObject(value)) {
           return [
-            ...acc,
             [space, '+ ', key, ': ', '{\n'].join(''),
             renderObjectValue(value),
             [space, '  ', '}', '\n'].join(''),
           ];
         }
 
-        return [...acc, `${space}${'+ '}${key}${keyValueSeparator}${value}\n`];
+        return [`${space}${'+ '}${key}${keyValueSeparator}${value}\n`];
       }
 
       if (state === STATES.deleted) {
         if (_.isPlainObject(value)) {
           const result = [
-            ...acc,
             [space, '- ', key, ': ', '{\n'].join(''),
             renderObjectValue(value),
             [space, '  ', '}', '\n'].join(''),
@@ -47,13 +45,12 @@ export default (data) => {
           return result;
         }
 
-        return [...acc, `${space}${'- '}${key}${keyValueSeparator}${value}\n`];
+        return [`${space}${'- '}${key}${keyValueSeparator}${value}\n`];
       }
 
       if (state === STATES.modified) {
         if (_.isPlainObject(value) && _.isPlainObject(prevValue)) {
           return [
-            ...acc,
             [space, '  ', key, ': ', '{\n'].join(''),
             renderObjectValue(value),
             [space, '  ', '}', '\n'].join(''),
@@ -64,7 +61,6 @@ export default (data) => {
 
         if (isPrimitiveValueModifiedToObjectValue) {
           return [
-            ...acc,
             [`${space}${'- '}${key}${keyPrevValueSeparator}${prevValue}\n`].join(''),
             [space, '  ', key, ': ', '{\n'].join(''),
             renderObjectValue(value),
@@ -75,7 +71,6 @@ export default (data) => {
         const isObjectValueModifiedToPrimitiveValue = _.isPlainObject(prevValue);
         if (isObjectValueModifiedToPrimitiveValue) {
           return [
-            ...acc,
             [space, '- ', key, ': ', '{\n'].join(''),
             renderObjectValue(prevValue),
             [space, '  ', '}', '\n'].join(''),
@@ -84,7 +79,6 @@ export default (data) => {
         }
 
         return [
-          ...acc,
           [`${space}${'- '}${key}${keyPrevValueSeparator}${prevValue}\n`].join(''),
           [`${space}${'+ '}${key}${keyValueSeparator}${value}\n`].join(''),
         ];
@@ -93,18 +87,17 @@ export default (data) => {
       if (state === STATES.initial) {
         if (_.isPlainObject(value)) {
           return [
-            ...acc,
             [space, '  ', key, ': ', '{\n'].join(''),
             renderObjectValue(value),
             [space, '  ', '}', '\n'].join(''),
           ];
         }
 
-        return [...acc, `${space}${'  '}${key}${keyValueSeparator}${value}\n`];
+        return [`${space}${'  '}${key}${keyValueSeparator}${value}\n`];
       }
 
       throw new Error(`Unexpected state: ${state}`);
-    }, []);
+    });
 
     return parsed;
   };
