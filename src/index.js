@@ -7,7 +7,7 @@ import makeDiff from './makeDiff.js';
 
 const defaultReadFile = (filePath) => {
   const preparedPath = path.isAbsolute(filePath)
-    ? path.join(process.cwd(), path.normalize(filePath))
+    ? path.normalize(filePath)
     : path.resolve(process.cwd(), path.normalize(filePath));
 
   return fs.readFileSync(preparedPath, { encoding: 'utf8' });
