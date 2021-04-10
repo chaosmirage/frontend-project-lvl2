@@ -1,0 +1,197 @@
+{
+  "common": {
+    "state": "modified",
+    "value": {
+      "setting1": {
+        "state": "initial",
+        "value": "Value 1"
+      },
+      "setting2": {
+        "state": "deleted",
+        "value": 200
+      },
+      "setting3": {
+        "state": "modified",
+        "value": null,
+        "prevValue": true
+      },
+      "setting6": {
+        "state": "modified",
+        "value": {
+          "key": {
+            "state": "initial",
+            "value": "value"
+          },
+          "doge": {
+            "state": "modified",
+            "value": {
+              "wow": {
+                "state": "modified",
+                "value": "so much",
+                "prevValue": ""
+              }
+            },
+            "prevValue": {
+              "wow": {
+                "state": "initial",
+                "value": ""
+              }
+            }
+          },
+          "ops": {
+            "state": "added",
+            "value": "vops"
+          }
+        },
+        "prevValue": {
+          "key": {
+            "state": "initial",
+            "value": "value"
+          },
+          "doge": {
+            "state": "initial",
+            "value": {
+              "wow": {
+                "state": "initial",
+                "value": ""
+              }
+            }
+          }
+        }
+      },
+      "follow": {
+        "state": "added",
+        "value": false
+      },
+      "setting4": {
+        "state": "added",
+        "value": "blah blah"
+      },
+      "setting5": {
+        "state": "added",
+        "value": {
+          "key5": {
+            "state": "initial",
+            "value": "value5"
+          }
+        }
+      }
+    },
+    "prevValue": {
+      "setting1": {
+        "state": "initial",
+        "value": "Value 1"
+      },
+      "setting2": {
+        "state": "initial",
+        "value": 200
+      },
+      "setting3": {
+        "state": "initial",
+        "value": true
+      },
+      "setting6": {
+        "state": "initial",
+        "value": {
+          "key": {
+            "state": "initial",
+            "value": "value"
+          },
+          "doge": {
+            "state": "initial",
+            "value": {
+              "wow": {
+                "state": "initial",
+                "value": ""
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "group1": {
+    "state": "modified",
+    "value": {
+      "baz": {
+        "state": "modified",
+        "value": "bars",
+        "prevValue": "bas"
+      },
+      "foo": {
+        "state": "initial",
+        "value": "bar"
+      },
+      "nest": {
+        "state": "modified",
+        "value": "str",
+        "prevValue": {
+          "key": {
+            "state": "initial",
+            "value": "value"
+          }
+        }
+      }
+    },
+    "prevValue": {
+      "baz": {
+        "state": "initial",
+        "value": "bas"
+      },
+      "foo": {
+        "state": "initial",
+        "value": "bar"
+      },
+      "nest": {
+        "state": "initial",
+        "value": {
+          "key": {
+            "state": "initial",
+            "value": "value"
+          }
+        }
+      }
+    }
+  },
+  "group2": {
+    "state": "deleted",
+    "value": {
+      "abc": {
+        "state": "initial",
+        "value": 12345
+      },
+      "deep": {
+        "state": "initial",
+        "value": {
+          "id": {
+            "state": "initial",
+            "value": 45
+          }
+        }
+      }
+    }
+  },
+  "group3": {
+    "state": "added",
+    "value": {
+      "deep": {
+        "state": "initial",
+        "value": {
+          "id": {
+            "state": "initial",
+            "value": {
+              "number": {
+                "state": "initial",
+                "value": 45
+              }
+            }
+          }
+        }
+      },
+      "fee": {
+        "state": "initial",
+        "value": 100500
+      }
+    }
+  }
+}

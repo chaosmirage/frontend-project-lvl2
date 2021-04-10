@@ -9,6 +9,9 @@ export default (format) => {
     case 'plain':
       return plain;
 
+    case 'json':
+      return (data) => JSON.stringify(data, null, 2);
+
     default:
       throw new Error(`Unexpected report format: ${format}`);
   }
