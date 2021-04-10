@@ -9,6 +9,18 @@
         "value": "Value 1"
       },
       {
+        "name": "setting10",
+        "type": "modified",
+        "children": [
+          {
+            "name": "a",
+            "type": "initial",
+            "value": "b"
+          }
+        ],
+        "prevValue": true
+      },
+      {
         "name": "setting2",
         "type": "deleted",
         "value": 200
@@ -99,6 +111,11 @@
         "name": "setting1",
         "type": "initial",
         "value": "Value 1"
+      },
+      {
+        "name": "setting10",
+        "type": "initial",
+        "value": true
       },
       {
         "name": "setting2",

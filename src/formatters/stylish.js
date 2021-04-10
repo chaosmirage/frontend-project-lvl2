@@ -12,9 +12,6 @@ export default (data) => {
     const space = '  '.repeat(level);
 
     const parsed = sorted.flatMap(({ name, type, value, prevValue, children }) => {
-      const keyValueSeparator = value === '' ? ':' : ': ';
-      const keyPrevValueSeparator = prevValue === '' ? ':' : ': ';
-
       if (type === STATES.modified) {
         const isObjectValueChangeToObjectValue = children && prevValue instanceof Array;
         if (isObjectValueChangeToObjectValue) {
@@ -28,8 +25,8 @@ export default (data) => {
         const isPrimitiveValueModifiedToObjectValue = children;
         if (isPrimitiveValueModifiedToObjectValue) {
           return [
-            [`${space}${'- '}${name}${keyPrevValueSeparator}${prevValue}\n`].join(''),
-            [space, '  ', name, ': ', '{\n'].join(''),
+            [`${space}${'- '}${name}: ${prevValue}\n`].join(''),
+            [space, '+ ', name, ': ', '{\n'].join(''),
             iter(children, level + 2).join(''),
             [space, '  ', '}', '\n'].join(''),
           ];
@@ -41,13 +38,13 @@ export default (data) => {
             [space, '- ', name, ': ', '{\n'].join(''),
             iter(prevValue, level + 2).join(''),
             [space, '  ', '}', '\n'].join(''),
-            [`${space}${'+ '}${name}${keyValueSeparator}${value}\n`].join(''),
+            [`${space}${'+ '}${name}: ${value}\n`].join(''),
           ];
         }
 
         return [
-          [`${space}${'- '}${name}${keyPrevValueSeparator}${prevValue}\n`].join(''),
-          [`${space}${'+ '}${name}${keyValueSeparator}${value}\n`].join(''),
+          [`${space}${'- '}${name}: ${prevValue}\n`].join(''),
+          [`${space}${'+ '}${name}: ${value}\n`].join(''),
         ];
       }
 
@@ -60,7 +57,7 @@ export default (data) => {
           ];
         }
 
-        return [`${space}${'+ '}${name}${keyValueSeparator}${value}\n`];
+        return [`${space}${'+ '}${name}: ${value}\n`];
       }
 
       if (type === STATES.initial) {
@@ -71,7 +68,7 @@ export default (data) => {
             [space, '  ', '}', '\n'].join(''),
           ];
         }
-        return [`${space}${'  '}${name}${keyValueSeparator}${value}\n`];
+        return [`${space}${'  '}${name}: ${value}\n`];
       }
 
       if (type === STATES.deleted) {
@@ -85,7 +82,7 @@ export default (data) => {
           return result;
         }
 
-        return [`${space}${'- '}${name}${keyValueSeparator}${value}\n`];
+        return [`${space}${'- '}${name}: ${value}\n`];
       }
 
       throw new Error(`Unexpected type: ${type}`);

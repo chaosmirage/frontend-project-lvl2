@@ -13,8 +13,10 @@ export default (data) => {
 
       if (type === STATES.modified) {
         if (children) {
+          const test2 = iter(children, [...prevPath, name]);
+
           return iter(children, [...prevPath, name])
-            .filter((item) => item !== null)
+            .filter((item) => item !== null && item !== '')
             .join('\n');
         }
 
@@ -61,6 +63,8 @@ export default (data) => {
 
     return result;
   };
+
+  const test = iter(data, []);
 
   const result = iter(data, [])
     .filter((item) => item !== null)

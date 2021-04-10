@@ -75,7 +75,7 @@ export default (content1, content2) => {
         return {
           name: key,
           type: STATES.modified,
-          children: iter(file1ContentValue, file2ContentValue),
+          children: iter(file2ContentValue, file2ContentValue),
           prevValue: file1ContentValue,
         };
       }
