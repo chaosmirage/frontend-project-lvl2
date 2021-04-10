@@ -7,96 +7,88 @@ export default (data) => {
       return [];
     }
 
-    const sorted = _.sortBy(Object.keys(currentLevelData));
+    const sorted = _.sortBy(currentLevelData, 'name');
 
     const space = '  '.repeat(level);
 
-    const parsed = sorted.flatMap((key) => {
-      const { state, value, prevValue } = currentLevelData[key];
-
-      const renderObjectValue = (currentValue) => {
-        const result = [...iter(currentValue, level + 2).join('')].join('');
-        return result;
-      };
-
+    const parsed = sorted.flatMap(({ name, type, value, prevValue, children }) => {
       const keyValueSeparator = value === '' ? ':' : ': ';
       const keyPrevValueSeparator = prevValue === '' ? ':' : ': ';
 
-      if (state === STATES.added) {
-        if (_.isPlainObject(value)) {
+      if (type === STATES.modified) {
+        const isObjectValueChangeToObjectValue = children && prevValue instanceof Array;
+        if (isObjectValueChangeToObjectValue) {
           return [
-            [space, '+ ', key, ': ', '{\n'].join(''),
-            renderObjectValue(value),
+            [space, '  ', name, ': ', '{\n'].join(''),
+            iter(children, level + 2).join(''),
             [space, '  ', '}', '\n'].join(''),
           ];
         }
 
-        return [`${space}${'+ '}${key}${keyValueSeparator}${value}\n`];
+        const isPrimitiveValueModifiedToObjectValue = children;
+        if (isPrimitiveValueModifiedToObjectValue) {
+          return [
+            [`${space}${'- '}${name}${keyPrevValueSeparator}${prevValue}\n`].join(''),
+            [space, '  ', name, ': ', '{\n'].join(''),
+            iter(children, level + 2).join(''),
+            [space, '  ', '}', '\n'].join(''),
+          ];
+        }
+
+        const isObjectValueModifiedToPrimitiveValue = prevValue instanceof Array;
+        if (isObjectValueModifiedToPrimitiveValue) {
+          return [
+            [space, '- ', name, ': ', '{\n'].join(''),
+            iter(prevValue, level + 2).join(''),
+            [space, '  ', '}', '\n'].join(''),
+            [`${space}${'+ '}${name}${keyValueSeparator}${value}\n`].join(''),
+          ];
+        }
+
+        return [
+          [`${space}${'- '}${name}${keyPrevValueSeparator}${prevValue}\n`].join(''),
+          [`${space}${'+ '}${name}${keyValueSeparator}${value}\n`].join(''),
+        ];
       }
 
-      if (state === STATES.deleted) {
-        if (_.isPlainObject(value)) {
+      if (type === STATES.added) {
+        if (children) {
+          return [
+            [space, '+ ', name, ': ', '{\n'].join(''),
+            iter(children, level + 2).join(''),
+            [space, '  ', '}', '\n'].join(''),
+          ];
+        }
+
+        return [`${space}${'+ '}${name}${keyValueSeparator}${value}\n`];
+      }
+
+      if (type === STATES.initial) {
+        if (children) {
+          return [
+            [space, '  ', name, ': ', '{\n'].join(''),
+            iter(children, level + 2).join(''),
+            [space, '  ', '}', '\n'].join(''),
+          ];
+        }
+        return [`${space}${'  '}${name}${keyValueSeparator}${value}\n`];
+      }
+
+      if (type === STATES.deleted) {
+        if (children) {
           const result = [
-            [space, '- ', key, ': ', '{\n'].join(''),
-            renderObjectValue(value),
+            [space, '- ', name, ': ', '{\n'].join(''),
+            iter(children, level + 2).join(''),
             [space, '  ', '}', '\n'].join(''),
           ];
 
           return result;
         }
 
-        return [`${space}${'- '}${key}${keyValueSeparator}${value}\n`];
+        return [`${space}${'- '}${name}${keyValueSeparator}${value}\n`];
       }
 
-      if (state === STATES.modified) {
-        if (_.isPlainObject(value) && _.isPlainObject(prevValue)) {
-          return [
-            [space, '  ', key, ': ', '{\n'].join(''),
-            renderObjectValue(value),
-            [space, '  ', '}', '\n'].join(''),
-          ];
-        }
-
-        const isPrimitiveValueModifiedToObjectValue = _.isPlainObject(value);
-
-        if (isPrimitiveValueModifiedToObjectValue) {
-          return [
-            [`${space}${'- '}${key}${keyPrevValueSeparator}${prevValue}\n`].join(''),
-            [space, '  ', key, ': ', '{\n'].join(''),
-            renderObjectValue(value),
-            [space, '  ', '}', '\n'].join(''),
-          ];
-        }
-
-        const isObjectValueModifiedToPrimitiveValue = _.isPlainObject(prevValue);
-        if (isObjectValueModifiedToPrimitiveValue) {
-          return [
-            [space, '- ', key, ': ', '{\n'].join(''),
-            renderObjectValue(prevValue),
-            [space, '  ', '}', '\n'].join(''),
-            [`${space}${'+ '}${key}${keyValueSeparator}${value}\n`].join(''),
-          ];
-        }
-
-        return [
-          [`${space}${'- '}${key}${keyPrevValueSeparator}${prevValue}\n`].join(''),
-          [`${space}${'+ '}${key}${keyValueSeparator}${value}\n`].join(''),
-        ];
-      }
-
-      if (state === STATES.initial) {
-        if (_.isPlainObject(value)) {
-          return [
-            [space, '  ', key, ': ', '{\n'].join(''),
-            renderObjectValue(value),
-            [space, '  ', '}', '\n'].join(''),
-          ];
-        }
-
-        return [`${space}${'  '}${key}${keyValueSeparator}${value}\n`];
-      }
-
-      throw new Error(`Unexpected state: ${state}`);
+      throw new Error(`Unexpected type: ${type}`);
     });
 
     return parsed;

@@ -8,64 +8,62 @@ const getUpdatedMessage = (key, value, prevValue) =>
 
 export default (data) => {
   const iter = (currentLevelData, prevPath = []) => {
-    const result = Object.keys(currentLevelData)
-      .sort()
-      .flatMap((key) => {
-        const { value, prevValue, state } = _.get(currentLevelData, [key]);
+    const result = _.sortBy(currentLevelData, 'name').map(({ name, type, value, prevValue, children }) => {
+      const fullPathToValue = [...prevPath, name].join('.');
 
-        const fullPathToValue = [...prevPath, key].join('.');
-
-        if (state === STATES.modified) {
-          if (_.isPlainObject(value)) {
-            return [iter(value, [...prevPath, key]).join('\n')];
-          }
-
-          const valueToPrintFormat = {
-            string: (pureValue) => `'${pureValue}'`,
-            object: (pureValue) => {
-              if (pureValue === null) {
-                return pureValue;
-              }
-
-              return '[complex value]';
-            },
-            number: (pureValue) => pureValue,
-            boolean: (pureValue) => pureValue,
-          };
-
-          return getUpdatedMessage(
-            fullPathToValue,
-            valueToPrintFormat[typeof value](value),
-            valueToPrintFormat[typeof prevValue](prevValue)
-          );
+      if (type === STATES.modified) {
+        if (children) {
+          return iter(children, [...prevPath, name])
+            .filter((item) => item !== null)
+            .join('\n');
         }
 
-        if (state === STATES.added) {
-          const isAddedStringValue = typeof value === 'string';
+        const valueToPrintFormat = {
+          string: (pureValue) => `'${pureValue}'`,
+          object: (pureValue) => {
+            if (pureValue === null) {
+              return pureValue;
+            }
 
-          if (isAddedStringValue) {
-            return getAddedMessage(`'${fullPathToValue}'`, `'${value}'`);
-          }
+            return '[complex value]';
+          },
+          number: (pureValue) => pureValue,
+          boolean: (pureValue) => pureValue,
+        };
 
-          const isAddedComplexValue = value instanceof Object;
+        return getUpdatedMessage(
+          fullPathToValue,
+          valueToPrintFormat[typeof value](value),
+          valueToPrintFormat[typeof prevValue](prevValue)
+        );
+      }
 
-          if (isAddedComplexValue) {
-            return getAddedMessage(`'${fullPathToValue}'`, '[complex value]');
-          }
+      if (type === STATES.added) {
+        const isAddedStringValue = typeof value === 'string';
 
-          return getAddedMessage(`'${fullPathToValue}'`, value);
+        if (isAddedStringValue) {
+          return getAddedMessage(`'${fullPathToValue}'`, `'${value}'`);
         }
 
-        if (state === STATES.deleted) {
-          return `Property '${fullPathToValue}' was removed`;
+        if (children) {
+          return getAddedMessage(`'${fullPathToValue}'`, '[complex value]');
         }
 
-        return [];
-      });
+        return getAddedMessage(`'${fullPathToValue}'`, value);
+      }
+
+      if (type === STATES.deleted) {
+        return `Property '${fullPathToValue}' was removed`;
+      }
+
+      return null;
+    });
 
     return result;
   };
 
-  const result = iter(data, []).join('\n');
+  const result = iter(data, [])
+    .filter((item) => item !== null)
+    .join('\n');
   return result;
 };

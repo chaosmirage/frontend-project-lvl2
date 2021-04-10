@@ -1,197 +1,239 @@
-{
-  "common": {
-    "state": "modified",
-    "value": {
-      "setting1": {
-        "state": "initial",
+[
+  {
+    "name": "common",
+    "type": "modified",
+    "children": [
+      {
+        "name": "setting1",
+        "type": "initial",
         "value": "Value 1"
       },
-      "setting2": {
-        "state": "deleted",
+      {
+        "name": "setting2",
+        "type": "deleted",
         "value": 200
       },
-      "setting3": {
-        "state": "modified",
+      {
+        "name": "setting3",
+        "type": "modified",
         "value": null,
         "prevValue": true
       },
-      "setting6": {
-        "state": "modified",
-        "value": {
-          "key": {
-            "state": "initial",
+      {
+        "name": "setting6",
+        "type": "modified",
+        "children": [
+          {
+            "name": "key",
+            "type": "initial",
             "value": "value"
           },
-          "doge": {
-            "state": "modified",
-            "value": {
-              "wow": {
-                "state": "modified",
+          {
+            "name": "doge",
+            "type": "modified",
+            "children": [
+              {
+                "name": "wow",
+                "type": "modified",
                 "value": "so much",
                 "prevValue": ""
               }
-            },
-            "prevValue": {
-              "wow": {
-                "state": "initial",
+            ],
+            "prevValue": [
+              {
+                "name": "wow",
+                "type": "initial",
                 "value": ""
               }
-            }
+            ]
           },
-          "ops": {
-            "state": "added",
+          {
+            "name": "ops",
+            "type": "added",
             "value": "vops"
           }
-        },
-        "prevValue": {
-          "key": {
-            "state": "initial",
+        ],
+        "prevValue": [
+          {
+            "name": "key",
+            "type": "initial",
             "value": "value"
           },
-          "doge": {
-            "state": "initial",
-            "value": {
-              "wow": {
-                "state": "initial",
+          {
+            "name": "doge",
+            "type": "initial",
+            "children": [
+              {
+                "name": "wow",
+                "type": "initial",
                 "value": ""
               }
-            }
+            ]
           }
-        }
+        ]
       },
-      "follow": {
-        "state": "added",
+      {
+        "name": "follow",
+        "type": "added",
         "value": false
       },
-      "setting4": {
-        "state": "added",
+      {
+        "name": "setting4",
+        "type": "added",
         "value": "blah blah"
       },
-      "setting5": {
-        "state": "added",
-        "value": {
-          "key5": {
-            "state": "initial",
+      {
+        "name": "setting5",
+        "type": "added",
+        "children": [
+          {
+            "name": "key5",
+            "type": "initial",
             "value": "value5"
           }
-        }
+        ]
       }
-    },
-    "prevValue": {
-      "setting1": {
-        "state": "initial",
+    ],
+    "prevValue": [
+      {
+        "name": "setting1",
+        "type": "initial",
         "value": "Value 1"
       },
-      "setting2": {
-        "state": "initial",
+      {
+        "name": "setting2",
+        "type": "initial",
         "value": 200
       },
-      "setting3": {
-        "state": "initial",
+      {
+        "name": "setting3",
+        "type": "initial",
         "value": true
       },
-      "setting6": {
-        "state": "initial",
-        "value": {
-          "key": {
-            "state": "initial",
+      {
+        "name": "setting6",
+        "type": "initial",
+        "children": [
+          {
+            "name": "key",
+            "type": "initial",
             "value": "value"
           },
-          "doge": {
-            "state": "initial",
-            "value": {
-              "wow": {
-                "state": "initial",
+          {
+            "name": "doge",
+            "type": "initial",
+            "children": [
+              {
+                "name": "wow",
+                "type": "initial",
                 "value": ""
               }
-            }
+            ]
           }
-        }
+        ]
       }
-    }
+    ]
   },
-  "group1": {
-    "state": "modified",
-    "value": {
-      "baz": {
-        "state": "modified",
+  {
+    "name": "group1",
+    "type": "modified",
+    "children": [
+      {
+        "name": "baz",
+        "type": "modified",
         "value": "bars",
         "prevValue": "bas"
       },
-      "foo": {
-        "state": "initial",
+      {
+        "name": "foo",
+        "type": "initial",
         "value": "bar"
       },
-      "nest": {
-        "state": "modified",
+      {
+        "name": "nest",
+        "type": "modified",
         "value": "str",
-        "prevValue": {
-          "key": {
-            "state": "initial",
+        "prevValue": [
+          {
+            "name": "key",
+            "type": "initial",
             "value": "value"
           }
-        }
+        ]
       }
-    },
-    "prevValue": {
-      "baz": {
-        "state": "initial",
+    ],
+    "prevValue": [
+      {
+        "name": "baz",
+        "type": "initial",
         "value": "bas"
       },
-      "foo": {
-        "state": "initial",
+      {
+        "name": "foo",
+        "type": "initial",
         "value": "bar"
       },
-      "nest": {
-        "state": "initial",
-        "value": {
-          "key": {
-            "state": "initial",
+      {
+        "name": "nest",
+        "type": "initial",
+        "children": [
+          {
+            "name": "key",
+            "type": "initial",
             "value": "value"
           }
-        }
+        ]
       }
-    }
+    ]
   },
-  "group2": {
-    "state": "deleted",
-    "value": {
-      "abc": {
-        "state": "initial",
+  {
+    "name": "group2",
+    "type": "deleted",
+    "children": [
+      {
+        "name": "abc",
+        "type": "initial",
         "value": 12345
       },
-      "deep": {
-        "state": "initial",
-        "value": {
-          "id": {
-            "state": "initial",
+      {
+        "name": "deep",
+        "type": "initial",
+        "children": [
+          {
+            "name": "id",
+            "type": "initial",
             "value": 45
           }
-        }
+        ]
       }
-    }
+    ]
   },
-  "group3": {
-    "state": "added",
-    "value": {
-      "deep": {
-        "state": "initial",
-        "value": {
-          "id": {
-            "state": "initial",
-            "value": {
-              "number": {
-                "state": "initial",
+  {
+    "name": "group3",
+    "type": "added",
+    "children": [
+      {
+        "name": "deep",
+        "type": "initial",
+        "children": [
+          {
+            "name": "id",
+            "type": "initial",
+            "children": [
+              {
+                "name": "number",
+                "type": "initial",
                 "value": 45
               }
-            }
+            ]
           }
-        }
+        ]
       },
-      "fee": {
-        "state": "initial",
+      {
+        "name": "fee",
+        "type": "initial",
         "value": 100500
       }
-    }
+    ]
   }
-}
+]
