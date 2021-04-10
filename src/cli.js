@@ -11,7 +11,7 @@ export default () => {
     .option('-f, --format [type]', 'output format', 'stylish')
     .action((filepath1, filepath2, options) => {
       const { format } = options;
-      const result = gendiff({ filepath1, filepath2, format });
+      const result = gendiff(filepath1, filepath2, format);
 
       console.log(result);
     });

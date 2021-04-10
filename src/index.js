@@ -13,7 +13,7 @@ const defaultReadFile = (filePath) => {
   return fs.readFileSync(preparedPath, { encoding: 'utf8' });
 };
 
-export default ({ filepath1, filepath2, format: formatName = 'stylish', readFile = defaultReadFile }) => {
+export default (filepath1, filepath2, formatName = 'stylish', readFile = defaultReadFile) => {
   const parse = makeParser(path.extname(filepath1));
   const format = makeFormatter(formatName);
 
