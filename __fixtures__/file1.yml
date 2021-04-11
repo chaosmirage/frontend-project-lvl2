@@ -1,9 +1,9 @@
 ---
 common:
   setting1: Value 1
-  setting10: true
   setting2: 200
   setting3: true
+  setting10: true
   setting6:
     key: value
     doge:

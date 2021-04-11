@@ -39,7 +39,7 @@ describe('Формат вывода: plain', () => {
   });
 });
 
-describe.skip('Формат вывода: json', () => {
+describe('Формат вывода: json', () => {
   const result = readFile('json-result.txt').trim();
   const format = 'json';
 

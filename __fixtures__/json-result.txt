@@ -9,6 +9,17 @@
         "value": "Value 1"
       },
       {
+        "name": "setting2",
+        "type": "deleted",
+        "value": 200
+      },
+      {
+        "name": "setting3",
+        "type": "modified",
+        "value": null,
+        "prevValue": true
+      },
+      {
         "name": "setting10",
         "type": "modified",
         "children": [
@@ -18,17 +29,6 @@
             "value": "b"
           }
         ],
-        "prevValue": true
-      },
-      {
-        "name": "setting2",
-        "type": "deleted",
-        "value": 200
-      },
-      {
-        "name": "setting3",
-        "type": "modified",
-        "value": null,
         "prevValue": true
       },
       {
@@ -113,17 +113,17 @@
         "value": "Value 1"
       },
       {
-        "name": "setting10",
-        "type": "initial",
-        "value": true
-      },
-      {
         "name": "setting2",
         "type": "initial",
         "value": 200
       },
       {
         "name": "setting3",
+        "type": "initial",
+        "value": true
+      },
+      {
+        "name": "setting10",
         "type": "initial",
         "value": true
       },

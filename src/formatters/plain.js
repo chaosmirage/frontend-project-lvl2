@@ -12,11 +12,10 @@ export default (data) => {
       const fullPathToValue = [...prevPath, name].join('.');
 
       if (type === STATES.modified) {
-        if (children) {
-          const test2 = iter(children, [...prevPath, name]);
-
+        const isObjectValueChangeToObjectValue = children && prevValue instanceof Array;
+        if (isObjectValueChangeToObjectValue) {
           return iter(children, [...prevPath, name])
-            .filter((item) => item !== null && item !== '')
+            .filter((item) => item !== null)
             .join('\n');
         }
 
@@ -32,6 +31,16 @@ export default (data) => {
           number: (pureValue) => pureValue,
           boolean: (pureValue) => pureValue,
         };
+
+        const isPrimitiveValueModifiedToObjectValue = children && prevValue && !(prevValue instanceof Array);
+
+        if (isPrimitiveValueModifiedToObjectValue) {
+          return getUpdatedMessage(
+            fullPathToValue,
+            valueToPrintFormat[typeof children](children),
+            valueToPrintFormat[typeof prevValue](prevValue)
+          );
+        }
 
         return getUpdatedMessage(
           fullPathToValue,
@@ -63,8 +72,6 @@ export default (data) => {
 
     return result;
   };
-
-  const test = iter(data, []);
 
   const result = iter(data, [])
     .filter((item) => item !== null)
