@@ -4,7 +4,10 @@ import { STATES } from './constants.js';
 export default (content1, content2) => {
   const iter = (currentLevelContent1 = null, currentLevelContent2 = null) => {
     const uniqJoinedKeys = Array.from(
-      new Set([...Object.keys(currentLevelContent1 || {}), ...Object.keys(currentLevelContent2 || {})])
+      new Set([
+        ...Object.keys(currentLevelContent1 || {}),
+        ...Object.keys(currentLevelContent2 || {}),
+      ]),
     );
 
     return uniqJoinedKeys.map((key) => {
@@ -14,8 +17,8 @@ export default (content1, content2) => {
       const isPrevValuePlainObject = _.isPlainObject(file1ContentValue);
       const isNewValuePlainObject = _.isPlainObject(file2ContentValue);
 
-      const isObjectValueChangeToObjectValue =
-        _.isPlainObject(file1ContentValue) && _.isPlainObject(file2ContentValue);
+      const isObjectValueChangeToObjectValue = _.isPlainObject(file1ContentValue)
+        && _.isPlainObject(file2ContentValue);
 
       if (isObjectValueChangeToObjectValue) {
         const children = iter(file1ContentValue, file2ContentValue);
@@ -90,7 +93,8 @@ export default (content1, content2) => {
         };
       }
 
-      const isPrimitiveValueDeleted = _.has(currentLevelContent1, key) && !_.has(currentLevelContent2, key);
+      const isPrimitiveValueDeleted = _.has(currentLevelContent1, key)
+        && !_.has(currentLevelContent2, key);
       if (isPrimitiveValueDeleted) {
         return {
           name: key,
@@ -99,7 +103,8 @@ export default (content1, content2) => {
         };
       }
 
-      const isPrimitiveValueAdded = !_.has(currentLevelContent1, key) && _.has(currentLevelContent2, key);
+      const isPrimitiveValueAdded = !_.has(currentLevelContent1, key)
+        && _.has(currentLevelContent2, key);
       if (isPrimitiveValueAdded) {
         return {
           name: key,

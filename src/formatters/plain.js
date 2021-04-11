@@ -3,72 +3,76 @@ import { STATES } from '../constants.js';
 
 const getAddedMessage = (key, value) => `Property ${key} was added with value: ${value}`;
 
-const getUpdatedMessage = (key, value, prevValue) =>
-  `Property '${key}' was updated. From ${prevValue} to ${value}`;
+const getUpdatedMessage = (key, value, prevValue) => `Property '${key}' was updated. From ${prevValue} to ${value}`;
 
 export default (data) => {
   const iter = (currentLevelData, prevPath = []) => {
-    const result = _.sortBy(currentLevelData, 'name').map(({ name, type, value, prevValue, children }) => {
-      const fullPathToValue = [...prevPath, name].join('.');
+    const result = _.sortBy(currentLevelData, 'name').map(
+      ({
+        name, type, value, prevValue, children,
+      }) => {
+        const fullPathToValue = [...prevPath, name].join('.');
 
-      if (type === STATES.modified) {
-        const isObjectValueChangeToObjectValue = children && prevValue instanceof Array;
-        if (isObjectValueChangeToObjectValue) {
-          return iter(children, [...prevPath, name])
-            .filter((item) => item !== null)
-            .join('\n');
-        }
+        if (type === STATES.modified) {
+          const isObjectValueChangeToObjectValue = children && prevValue instanceof Array;
+          if (isObjectValueChangeToObjectValue) {
+            return iter(children, [...prevPath, name])
+              .filter((item) => item !== null)
+              .join('\n');
+          }
 
-        const valueToPrintFormat = {
-          string: (pureValue) => `'${pureValue}'`,
-          object: (pureValue) => {
-            if (pureValue === null) {
-              return pureValue;
-            }
+          const valueToPrintFormat = {
+            string: (pureValue) => `'${pureValue}'`,
+            object: (pureValue) => {
+              if (pureValue === null) {
+                return pureValue;
+              }
 
-            return '[complex value]';
-          },
-          number: (pureValue) => pureValue,
-          boolean: (pureValue) => pureValue,
-        };
+              return '[complex value]';
+            },
+            number: (pureValue) => pureValue,
+            boolean: (pureValue) => pureValue,
+          };
 
-        const isPrimitiveValueModifiedToObjectValue = children && prevValue && !(prevValue instanceof Array);
+          const isPrimitiveValueModifiedToObjectValue = children
+            && prevValue && !(prevValue instanceof Array);
 
-        if (isPrimitiveValueModifiedToObjectValue) {
+          if (isPrimitiveValueModifiedToObjectValue) {
+            return getUpdatedMessage(
+              fullPathToValue,
+              valueToPrintFormat[typeof children](children),
+              valueToPrintFormat[typeof prevValue](prevValue),
+            );
+          }
+
           return getUpdatedMessage(
             fullPathToValue,
-            valueToPrintFormat[typeof children](children),
-            valueToPrintFormat[typeof prevValue](prevValue)
+            valueToPrintFormat[typeof value](value),
+            valueToPrintFormat[typeof prevValue](prevValue),
           );
         }
 
-        return getUpdatedMessage(
-          fullPathToValue,
-          valueToPrintFormat[typeof value](value),
-          valueToPrintFormat[typeof prevValue](prevValue)
-        );
-      }
+        if (type === STATES.added) {
+          const isAddedStringValue = typeof value === 'string';
 
-      if (type === STATES.added) {
-        const isAddedStringValue = typeof value === 'string';
+          if (isAddedStringValue) {
+            return getAddedMessage(`'${fullPathToValue}'`, `'${value}'`);
+          }
 
-        if (isAddedStringValue) {
-          return getAddedMessage(`'${fullPathToValue}'`, `'${value}'`);
+          if (children) {
+            return getAddedMessage(`'${fullPathToValue}'`, '[complex value]');
+          }
+
+          return getAddedMessage(`'${fullPathToValue}'`, value);
         }
 
-        if (children) {
-          return getAddedMessage(`'${fullPathToValue}'`, '[complex value]');
+        if (type === STATES.deleted) {
+          return `Property '${fullPathToValue}' was removed`;
         }
 
-        return getAddedMessage(`'${fullPathToValue}'`, value);
-      }
-
-      if (type === STATES.deleted) {
-        return `Property '${fullPathToValue}' was removed`;
-      }
-
-      return null;
-    });
+        return null;
+      },
+    );
 
     return result;
   };

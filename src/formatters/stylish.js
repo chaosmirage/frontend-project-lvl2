@@ -11,7 +11,9 @@ export default (data) => {
 
     const space = '  '.repeat(level);
 
-    const parsed = sorted.flatMap(({ name, type, value, prevValue, children }) => {
+    const parsed = sorted.flatMap(({
+      name, type, value, prevValue, children,
+    }) => {
       if (type === STATES.modified) {
         const isObjectValueChangeToObjectValue = children && prevValue instanceof Array;
         if (isObjectValueChangeToObjectValue) {
