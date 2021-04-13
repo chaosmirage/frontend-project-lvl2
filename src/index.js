@@ -5,7 +5,7 @@ import makeParser from './parsers.js';
 import makeFormatter from './formatters/index.js';
 import makeDiff from './makeDiff.js';
 
-const defaultReadFile = (filePath) => {
+const readFile = (filePath) => {
   const preparedPath = path.isAbsolute(filePath)
     ? path.normalize(filePath)
     : path.resolve(process.cwd(), path.normalize(filePath));
@@ -13,7 +13,7 @@ const defaultReadFile = (filePath) => {
   return fs.readFileSync(preparedPath, { encoding: 'utf8' });
 };
 
-export default (filepath1, filepath2, formatName = 'stylish', readFile = defaultReadFile) => {
+export default (filepath1, filepath2, formatName = 'stylish') => {
   const parse = makeParser(path.extname(filepath1));
   const format = makeFormatter(formatName);
 

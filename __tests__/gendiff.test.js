@@ -1,59 +1,25 @@
+import fs from 'fs';
 import { test, expect, describe } from '@jest/globals';
 import gendiff from '../src/index.js';
-import readFile from '../src/utils/readFixtureFile.js';
+import getFixturePath from '../src/utils/readFixtureFile.js';
 
-describe('Формат вывода: stylish', () => {
-  const result = readFile('stylish-result.txt').trim();
+const readFile = (filename) => fs.readFileSync(getFixturePath(filename), { encoding: 'utf8' });
 
-  test('Сравнение JSON файлов', () => {
-    const filepath1 = '/file1.json';
-    const filepath2 = '/file2.json';
+const formats = ['json', 'yml'];
 
-    expect(gendiff(filepath1, filepath2, 'stylish', readFile)).toBe(result);
-  });
+const stylishResult = readFile('stylish-result.txt').trim();
+const plainResult = readFile('plain-result.txt').trim();
 
-  test('Сравнение YAML файлов', () => {
-    const filepath1 = '/file1.yml';
-    const filepath2 = '/file2.yml';
+describe('gendiff', () => {
+  test.each(formats)('Сравнение %s файлов', (format) => {
+    const filepath1 = getFixturePath(`file1.${format}`);
+    const filepath2 = getFixturePath(`file2.${format}`);
 
-    expect(gendiff(filepath1, filepath2, 'stylish', readFile)).toBe(result);
-  });
-});
+    expect(gendiff(filepath1, filepath2, 'stylish')).toBe(stylishResult);
+    expect(gendiff(filepath1, filepath2, 'plain')).toBe(plainResult);
 
-describe('Формат вывода: plain', () => {
-  const result = readFile('plain-result.txt').trim();
-  const format = 'plain';
+    const jsonDiff = gendiff(filepath1, filepath2, 'json');
 
-  test('Сравнение JSON файлов', () => {
-    const filepath1 = '/file1.json';
-    const filepath2 = '/file2.json';
-
-    expect(gendiff(filepath1, filepath2, format, readFile)).toBe(result);
-  });
-
-  test('Сравнение YAML файлов', () => {
-    const filepath1 = '/file1.yml';
-    const filepath2 = '/file2.yml';
-
-    expect(gendiff(filepath1, filepath2, format, readFile)).toBe(result);
-  });
-});
-
-describe('Формат вывода: json', () => {
-  const result = readFile('json-result.txt').trim();
-  const format = 'json';
-
-  test('Сравнение JSON файлов', () => {
-    const filepath1 = '/file1.json';
-    const filepath2 = '/file2.json';
-
-    expect(gendiff(filepath1, filepath2, format, readFile)).toBe(result);
-  });
-
-  test('Сравнение YAML файлов', () => {
-    const filepath1 = '/file1.yml';
-    const filepath2 = '/file2.yml';
-
-    expect(gendiff(filepath1, filepath2, format, readFile)).toBe(result);
+    expect(() => JSON.parse(jsonDiff)).not.toThrow();
   });
 });
